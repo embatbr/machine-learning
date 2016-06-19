@@ -7,6 +7,7 @@ Repository for machine learning practice.
 ### Handwritten digits
 
 - [MNIST](http://yann.lecun.com/exdb/mnist/)
+- [sklearn.datasets.load_digits](http://scikit-learn.org/stable/modules/generated/sklearn.datasets.load_digits.html)
 
 ### Spam email
 

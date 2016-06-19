@@ -50,17 +50,43 @@ def read_image_file(filename):
     }
 
 
+def read_label_file(filename):
+    f = open(filename, 'rb')
+
+    f.read(2 * BYTE_UNIT)
+    datatype = f.read(BYTE_UNIT)
+    if datatype != b'\x08':
+        raise Exception('Data type is not unsigned byte.')
+
+    num_dim = ord(f.read(BYTE_UNIT))
+
+    # (num_labels)
+    shape = [0] * num_dim
+    num_labels = 1
+    for i in range(num_dim):
+        shape[i] = bytes_to_int(f.read(INTEGER_SIZE_IN_BYTES))
+        num_labels = num_labels * shape[i]
+
+    labels = np.zeros(num_labels, dtype=np.uint8)
+    for lb in range(num_labels):
+        labels[lb] = ord(f.read(BYTE_UNIT))
+
+    labels = np.reshape(labels, shape)
+
+    return {
+        'num_labels' : shape[0],
+        'labels' : labels
+    }
+
+
 if __name__ == '__main__':
     DATASET_DIR = '../../datasets/MNIST'
 
     img_data = read_image_file('%s/training.images' % DATASET_DIR)
-    print(img_data['data'])
-    print(np.max(img_data['data']))
-    print(img_data['num_images'])
-    print(img_data['num_rows'])
-    print(img_data['num_columns'])
+    lb_data = read_label_file('%s/training.labels' % DATASET_DIR)
 
     import matplotlib.pyplot as plt
-    for i in range(img_data['data'].shape[0]):
+    for i in range(img_data['num_images']):
+        print('label: %d' % lb_data['labels'][i])
         plt.imshow(img_data['data'][i], cmap='Greys')
         plt.show()

@@ -18,7 +18,7 @@ def bytes_to_int(bstr):
     return ret
 
 
-def read_image_file(filename):
+def read_images_file(filename):
     f = open(filename, 'rb')
 
     f.read(2 * BYTE_UNIT)
@@ -50,7 +50,7 @@ def read_image_file(filename):
     }
 
 
-def read_label_file(filename):
+def read_labels_file(filename):
     f = open(filename, 'rb')
 
     f.read(2 * BYTE_UNIT)
@@ -104,12 +104,10 @@ def group_images_by_label(img_info, lb_info):
 if __name__ == '__main__':
     import matplotlib.pyplot as plt
 
-
     DATASET_DIR = '../../datasets/MNIST'
 
-
-    img_info = read_image_file('%s/training.images' % DATASET_DIR)
-    lb_info = read_label_file('%s/training.labels' % DATASET_DIR)
+    img_info = read_images_file('%s/training.images' % DATASET_DIR)
+    lb_info = read_labels_file('%s/training.labels' % DATASET_DIR)
     grouped_imgs = group_images_by_label(img_info, lb_info)
 
     print(grouped_imgs)

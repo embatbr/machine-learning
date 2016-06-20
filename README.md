@@ -2,11 +2,18 @@
 
 Repository for machine learning practice.
 
+## Guide
+
+The following topics should be coded in order, using different domains of problems:
+
+- Naive Bayes
+- Decision Trees
+- Neural Networks
+
 ## Topics
 
-### Naives Bayes Classification
-
 - [Stanford NLP - Text Classification](https://www.youtube.com/playlist?list=PLxD7K2uP7LQC3-EHzRFjMh18wE7Ro5zrm)
+- [Victor Lavrenko's playlist](https://www.youtube.com/user/victorlavrenko/playlists)
 
 ## Datasets
 

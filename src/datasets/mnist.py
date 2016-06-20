@@ -75,18 +75,46 @@ def read_label_file(filename):
 
     return {
         'num_labels' : shape[0],
-        'labels' : labels
+        'num_label_names' : 10,
+        'labels' : labels,
+        'label_names' : list(range(0, 10))
     }
 
 
+def group_images_by_label(img_info, lb_info):
+    if img_info['num_images'] != lb_info['num_labels']:
+        raise Exception('Number of images and labels must be equal.')
+
+    img_shape = (1, img_info['num_rows'], img_info['num_columns'])
+    grouped_imgs = [None] * lb_info['num_label_names']
+
+    for i in range(img_info['num_images']):
+        label = lb_info['labels'][i]
+        img = img_info['data'][i]
+
+        if grouped_imgs[label] is None:
+            grouped_imgs[label] = np.zeros(img_shape)
+            grouped_imgs[label][0] = grouped_imgs[label][0] + img
+        else:
+            grouped_imgs[label] = np.append(grouped_imgs[label], [img], axis=0)
+
+    return grouped_imgs
+
+
 if __name__ == '__main__':
+    import matplotlib.pyplot as plt
+
+
     DATASET_DIR = '../../datasets/MNIST'
 
-    img_data = read_image_file('%s/training.images' % DATASET_DIR)
-    lb_data = read_label_file('%s/training.labels' % DATASET_DIR)
 
-    import matplotlib.pyplot as plt
-    for i in range(img_data['num_images']):
-        print('label: %d' % lb_data['labels'][i])
-        plt.imshow(img_data['data'][i], cmap='Greys')
+    img_info = read_image_file('%s/training.images' % DATASET_DIR)
+    lb_info = read_label_file('%s/training.labels' % DATASET_DIR)
+    grouped_imgs = group_images_by_label(img_info, lb_info)
+
+    print(grouped_imgs)
+
+    for i in range(img_info['num_images']):
+        print('label: %d' % lb_info['labels'][i])
+        plt.imshow(img_info['data'][i], cmap='Greys')
         plt.show()

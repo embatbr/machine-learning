@@ -101,6 +101,21 @@ def group_images_by_label(img_info, lb_info):
     return grouped_imgs
 
 
+def extract_features(img_info):
+    num_images = img_info['num_images']
+    num_rows = img_info['num_rows']
+    num_columns = img_info['num_columns']
+    data = img_info['data']
+
+    features = np.zeros((num_images, num_rows*num_columns))#, dtype=np.uint8)
+
+    for i in range(num_images):
+        flat_data = np.reshape(data[i], num_rows*num_columns)
+        features[i] = features[i] + np.where(flat_data == 0, 0, 1)
+
+    return features
+
+
 if __name__ == '__main__':
     import matplotlib.pyplot as plt
 
@@ -109,10 +124,17 @@ if __name__ == '__main__':
     img_info = read_images_file('%s/training.images' % DATASET_DIR)
     lb_info = read_labels_file('%s/training.labels' % DATASET_DIR)
     grouped_imgs = group_images_by_label(img_info, lb_info)
+    features = extract_features(img_info)
 
-    print(grouped_imgs)
+    num_rows = img_info['num_rows']
+    num_columns = img_info['num_columns']
 
     for i in range(img_info['num_images']):
-        print('label: %d' % lb_info['labels'][i])
-        plt.imshow(img_info['data'][i], cmap='Greys')
+        print('label: %d' % lb_info['labels'][i], features[i])
+
+        plt.imshow(img_info['data'][i], cmap='Greys', interpolation='nearest')
+        features_reshaped = np.reshape(features[i], (num_rows, num_columns))
+        plt.figure()
+        plt.imshow(features_reshaped, cmap='Greys', interpolation='nearest')
+
         plt.show()

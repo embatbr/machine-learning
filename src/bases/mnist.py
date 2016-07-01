@@ -108,10 +108,11 @@ def extract_features(img_info):
     data = img_info['data']
 
     features = np.zeros((num_images, num_rows*num_columns))#, dtype=np.uint8)
+    data = np.rint(data / 255) # normalization and binarization
 
     for i in range(num_images):
         flat_data = np.reshape(data[i], num_rows*num_columns)
-        features[i] = features[i] + np.where(flat_data == 0, 0, 1)
+        features[i] = features[i] + flat_data
 
     return features
 
